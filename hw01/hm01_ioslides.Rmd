@@ -1,0 +1,31 @@
+---
+title: "Assignment 1 Presentation"
+output:
+  beamer_presentation: default
+  ioslides_presentation: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## 1. Exploring a dataset 
+```{r}
+#Finding a dataset of interest within the in-built R dataset collection
+datasets::Titanic
+```
+
+## 2. Using functions to explore the dataset 
+```{r}
+#Obtains the dimensions of the dataset
+dim(Titanic)
+#Provide the number of rows & columns, respectively
+nrow(Titanic)
+ncol(Titanic)
+#Returns the first part of the dataset
+str(Titanic)
+#Provides result summaries
+summary(Titanic)
+```
+```
+
