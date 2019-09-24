@@ -84,15 +84,41 @@ What values are typical? What’s the spread? What’s the distribution? Etc., t
 Feel free to use summary stats, tables, figures.
 
 ```{r}
-#possible values for categorical variable
-gapminder %>%
-  distinct(country) %>%
-  DT::datatable()
+library(tidyverse)
 
-#possible values for numerical variable
+#exploring categorical variable: type of cars
+mtcars %>%
+  rownames_to_column("type") %>% 
+  distinct(type) %>%
+  filter(stringr::str_detect(type, "Toyota")) %>% #looking for Toyota models in the dataset
+  knitr::kable()
+
+mtcars %>%
+  rownames_to_column("type") %>% 
+  group_by("type") %>%
+  filter(mpg > 30 & hp > 50) %>% #finding all cars with mpg above 30 and hp above 50
+  arrange(desc(mpg, hp)) %>%
+  mutate(relationship_mpg_hp = mpg * hp) %>%
+  knitr::kable()
+  
+
+#exploring numerical variable: year
 gapminder %>%
-  distinct(year) %>%
-  DT::datatable()
+  distinct(year) %>% #all the values for this variable
+  knitr::kable()
+
+gapminder %>%
+  filter(lifeExp > 60, gdpPercap > 5000) %>% #interested in countries with lifeExp > 60 and gdpPercap > 5000
+    group_by(year) %>% 
+  arrange(desc(year)) %>%
+    select(-c(country, pop, gdpPercap)) %>% #getting rid of columns that I am not interested in
+  ggplot(aes(year, log(lifeExp))) + 
+  geom_bar(stat="identity", fill = "aquamarine2") +
+  xlab("Year") +
+  ylab("Life Expectancy (log scale)") +
+  ggtitle("Growth of life expectancy over time") +
+  theme_bw()
+
 ```
 
 ## **Exercise 3: Explore various plot types**
