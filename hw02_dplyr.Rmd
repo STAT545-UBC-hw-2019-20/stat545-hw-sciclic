@@ -1,0 +1,153 @@
+---
+title: "hw02_dplyr"
+output: pdf_document
+always_allow_html: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## **Exercise 1: Basic dplyr**
+
+*Loading packages*
+```{r}
+library(dplyr)
+library(gapminder)
+```
+
+### **1.1**
+
+```{r}
+gapminder %>%
+  filter(year < 1980 & year > 1969,
+         country %in% c("Canada", "Spain", "Portugal")) %>%
+  knitr::kable()
+```
+
+### **1.2**
+
+```{r}
+gapminder %>%
+  filter(year < 1980 & year > 1969,
+         country %in% c("Canada", "Spain", "Portugal")) %>%
+  select(country, gdpPercap) %>%
+  knitr::kable()
+```
+
+### **1.3**
+
+```{r}
+gapminder %>%
+  group_by(country) %>%
+  select(country, year, lifeExp) %>% 
+  mutate(lifeExp_increase = lifeExp - lag(lifeExp)) %>% 
+  arrange(lifeExp_increase) %>%
+  filter(lifeExp_increase < 0) %>%
+  DT::datatable()
+```
+
+### **1.4**
+
+```{r}
+gapminder %>%
+  group_by(country) %>%
+  summarize(maxGdpPercap = max(gdpPercap)) %>%
+  DT::datatable()
+```
+
+### **1.5**
+
+```{r}
+library(ggplot2)
+
+gapminder %>%
+  filter(country == "Canada",
+         lifeExp, gdpPercap) %>%
+  mutate(gdpPercap_log = log(gdpPercap)) %>%
+  ggplot(aes(lifeExp, gdpPercap_log)) + 
+  geom_point(colour="turquoise2") + 
+  xlab("Life expectancy") + 
+  ylab("GDP per capita") + 
+  ggtitle("Relationship between life expectancy and GDP per capita in Canada") +
+  theme_bw()
+
+```
+
+## **Exercise 2: Explore individual variables with dplyr**
+
+Pick one categorical variable and one quantitative variable to explore. Answer the following questions in whichever way you think is appropriate, using dplyr:
+
+What are possible values (or range, whichever is appropriate) of each variable?
+What values are typical? What’s the spread? What’s the distribution? Etc., tailored to the variable at hand.
+
+Feel free to use summary stats, tables, figures.
+
+```{r}
+#possible values for categorical variable
+gapminder %>%
+  distinct(country) %>%
+  DT::datatable()
+
+#possible values for numerical variable
+gapminder %>%
+  distinct(year) %>%
+  DT::datatable()
+```
+
+## **Exercise 3: Explore various plot types**
+
+```{r}
+library(ggplot2)
+
+DT::datatable(datasets::faithful)
+
+faithful %>%
+  ggplot(aes(eruptions, waiting)) +
+  xlab("Eruption time (min)") +
+  ylab("Wait time (min)") +
+  ggtitle("Timing Patterns of Eruption of the Old Faithful Geyser") +
+  geom_point(alpha = 0.5, colour = "slateblue3") +
+  geom_smooth(method = "lm") +
+  theme_bw()
+
+DT::datatable(datasets::mtcars)
+
+mtcars %>%
+  ggplot(aes(gear,)) + 
+  geom_bar(width = 0.5, fill = "tomato3") + 
+  xlab("Number of gears") +
+  ylab("Frequency") + 
+  ggtitle("Frequency of different gears in the mtcars dataset") +
+  theme_bw()
+
+```
+
+## **Recycling**
+
+For people who want to take things further.
+
+Evaluate this code and describe the result. Presumably the analyst’s intent was to get the data for Rwanda and Afghanistan. Did they succeed? Why or why not? If not, what is the correct way to do this?
+
+filter(gapminder, country == c("Rwanda", "Afghanistan"))
+Read What I do when I get a new data set as told through tweets from SimplyStatistics to get some ideas!
+
+```{r}
+DT::datatable(filter(gapminder, country == c("Rwanda", "Afghanistan"))) #This method is successful in retrieving data for  Rwanda and Afghanistan
+
+#Alternatives
+##Way 1
+gapminder %>% 
+  filter(country == "Rwanda" | country == "Afghanistan") %>%
+  DT::datatable()
+
+##Way 2
+gapminder %>%
+  filter(country %in% c("Rwanda", "Afghanistan")) %>%
+  DT::datatable()
+
+```
+
+## **Tibble display**
+
+Present numerical tables in a more attractive form using knitr::kable() for small tibbles (say, up to 10 rows), and DT::datatable() for larger tibbles.
