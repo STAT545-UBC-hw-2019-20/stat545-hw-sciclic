@@ -1,0 +1,160 @@
+---
+title: "Assignment 03: dplyr/ggplot "
+output: 
+  html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 1. Loading required packages to complete the assignment.
+
+```{r}
+library(tidyverse)
+library(gapminder)
+library(reshape2)
+library(kableExtra) #for ''Optional Exercise''
+```
+
+## 2. Tasks.
+
+For this assignment, I completed tasks **2, 4, and 5,** and I read the attached link to the side by side tables for the optional exercise, but I couldn't figure it out. 
+
+### **Instructions**
+
+For the full instructions, follow this [link](https://stat545.stat.ubc.ca/evaluation/hw03/hw03/).
+
+Pick three of the six tasks below, and produce:
+
+- a tibble, using dplyr as your data manipulation tool;
+- an accompanying plot of data from the tibble, using ggplot2 as your visualization tool; and
+- some dialogue about what your tables/figures show (doesn’t have to be much)
+
+### 2.1 **Task Option 2** 
+Get the maximum and minimum of GDP per capita for all continents.
+
+**Comments**
+
++ Forgot about the use of facet_wrap since last class and I found [this](http://www.cookbook-r.com/Graphs/Facets_(ggplot2)/) post very useful!
+
++ Found solution to the error I came across in line 58 in [this](https://stackoverflow.com/questions/39679057/r-ggplot2-stat-count-must-not-be-used-with-a-y-aesthetic-error-in-bar-graph/54296226) stack overflow post.
+
++ Figured out how to use different colours with geom_bar [here](https://plot.ly/ggplot2/geom_bar/)
+
++ Read [this](https://www.datanovia.com/en/blog/ggplot-title-subtitle-and-caption/) to find out how to add subtitles and captions using ggplot2. 
+
+
+```{r}
+explore.gdpGapminder <- 
+  gapminder %>%
+
+#Grouping by our variable of interest. Doesn't change how data is displayed but affects future use of dplyr functions; in this case it ensures that we are calculating the max and min GDP for each continent and not for each country
+  group_by(continent) %>% 
+
+#Reduces multiple values down to a single value, i.e. mutate could be used in place of summarise to create these two new variables of maximum and minimum GDP, but then each continent would be repeated several times. Also selects only the columns that we are interested in plotting.
+  summarise(minGdpPerCap = min(gdpPercap), 
+            maxGdpPerCap = max(gdpPercap))
+
+#To display table of data in a nicer format. Didn't continue the pipeline because ggplot2 cannot use this format.
+  knitr::kable(explore.gdpGapminder)
+
+#Melt converts the table from a wide to a tall format to later produce a representative plot to display the data. As a note, I used knitr::kable() prior to this step because I believe the wide format is neater than the tall format for a table.
+explore.gdpGapminder %>%
+  melt(id.vars = "continent", 
+       value.name = "gdpPerCap") %>%
+
+#Plotting data with ggplot2. Fill = variable differentially colours each value in the x axis. 
+  ggplot(aes(x = variable, y = gdpPerCap, fill = variable)) + 
+  
+  #Included stat = "identity" in response to 'Error: stat_count() must not be used with a y aesthetic' that R was returning if not included.
+  geom_bar(stat = "identity") + 
+  
+  #Splits data by the chosen variable (in this case, the categorical variable 'continent') and plots the subsets of data together. Chose nrow = 1 for a cleaner display (with 2+ rows it was kind of messy because the number of continents is uneven)
+  facet_wrap(~ continent, nrow = 1) + 
+  
+  #Changed X axis variable labels for a neater display, the names 'minGdpPerCap' and 'maxGdpPerCap' were too long. Could have gone back to earlier in the code to do this, but decided to try this function that I hadn't used before! 
+  scale_x_discrete(labels = c('Min','Max')) + 
+  
+  #Labelling axes and title
+  ylab("GDP per Capita") + 
+  xlab("Factor") +
+  ggtitle("Maximum and minimum GDP per capita for all continents") +
+  
+  #Removing legend that was introduced with the fill = variable in line 51 because it is redundant.
+  guides(fill = FALSE) +
+  
+  #Changing the plot theme from grey to black and white.
+  theme_bw() +
+  
+  #Adds a subtitle and a caption
+  labs(subtitle = "Using the gapminder dataset")
+
+```
+
+### 2.2 **Task Option 5**
+How is life expectancy changing over time on different continents?
+
+**Comments**
+
++ [Read](https://garrettgman.github.io/tidying/) about tidying data so that I could transpose the table to a wide format.
+
++ [More](https://www.datanovia.com/en/blog/ggplot-title-subtitle-and-caption/) on how to add + adjust ggplot2 titles, subtitles and caption.
+
+
+```{r}
+explore.lifeExp.gapminder <-
+  gapminder %>%
+  group_by(year, continent) %>%
+  summarise(avglifeExp = mean(lifeExp)) 
+
+#Wide format is neater to present the table, than the tall format above, which is still needed to plot the graph
+explore.lifeExp.gapminder_table <-
+  explore.lifeExp.gapminder %>%
+  spread(year, avglifeExp) %>%
+  knitr::kable()
+
+#Visualizing the data
+explore.lifeExp.gapminder_table
+
+ggplot(explore.lifeExp.gapminder, aes(x = year, y = avglifeExp, color = continent)) + 
+  geom_line() +
+  xlab("Year") +
+  ylab("Average life expectancy") +
+  ggtitle("Life expectancy trend for each continent from 1952 to 2007") +
+  theme_bw() +
+  labs(caption = "Source: Data used for this plot was generated using the gapminder dataset") +
+  theme(plot.caption = element_text(hjust = 0)) 
+```
+
+### 2.3 **Task Option 4**
+Compute a trimmed mean of life expectancy for different years. Or a weighted mean, weighting by population. Just try something other than the plain vanilla mean.
+
+**Notes**
+
++ I found [this](https://garstats.wordpress.com/2017/11/28/trimmed-means/) article explaining trimmed means and their uses very interesting (and useful!)
+
+```{r}
+trimmed.mean <-
+gapminder %>%
+  group_by(year) %>%
+  summarize(avg_lifeExp = mean(lifeExp, trim = .20)) #Standard error of the trimmed mean is less affected by outliers and asymmetry than the mean, so using trimmed means has more statistical power 
+
+#Visualizing the data
+trimmed.mean %>%
+  knitr::kable()
+
+ggplot(trimmed.mean, aes(x = year, y = avg_lifeExp, fill = year)) +
+  geom_bar(stat = "identity") +
+  theme_bw() +
+  ylab("Average Life Expectancy") +
+  xlab("Year") +
+  ggtitle("Average life expectancy in all countries in the gapminder dataset from 1952 to 2007") +
+  labs(caption = "Note: Average was calculated using the 20% trimmed mean") +
+  theme(plot.caption = element_text(hjust = 0))
+
+```
+
+**Optional Exercise (2%)**
+Get table and figure side-by-side. This gist might get you started. https://gist.github.com/jennybc/e9e9aba6ba18c72cec26
+
