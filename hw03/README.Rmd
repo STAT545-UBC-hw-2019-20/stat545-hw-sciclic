@@ -7,7 +7,7 @@ output: github_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# Hi! Welcome to the folder containing Assignment 3 for my STAT545 homework.
+## Hi! You are seeing the folder containing Assignment 3 for my STAT545 homework.
 
 This assignment was not only uploaded in the .Rmd and .html formats that you can see within the folder, you may also view it as a webpage [here](link).
 
