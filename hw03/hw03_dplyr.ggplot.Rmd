@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## 1. Loading required packages to complete the assignment.
 
-```{r}
+```{r, echo = FALSE}
 library(tidyverse)
 library(gapminder)
 library(reshape2)
@@ -34,7 +34,7 @@ Pick three of the six tasks below, and produce:
 ### 2.1 **Task Option 2** 
 Get the maximum and minimum of GDP per capita for all continents.
 
-**Comments**
+**Comments about the process**
 
 + Forgot about the use of facet_wrap since last class and I found [this](http://www.cookbook-r.com/Graphs/Facets_(ggplot2)/) post very useful!
 
@@ -44,6 +44,11 @@ Get the maximum and minimum of GDP per capita for all continents.
 
 + Read [this](https://www.datanovia.com/en/blog/ggplot-title-subtitle-and-caption/) to find out how to add subtitles and captions using ggplot2. 
 
+**Comments about table and plot**
+
++ It was interesting to see that while Asia has the highest max gdp per capita out of all five continents, the difference between the max and the min gdp per Capita is also the largest out of all five continents, whereas while Oceania's max gdp per Capita is significantly lower, the difference between the min and the max is also substantially reduced. 
+
++ The large difference between the min and max gdp per Capita in Asia could mean that wealth is mostly concentrated in subpopulations within the general population. Given that the economy of this continent comprises 60% of the world population, it is to be expected that its gdp per Capita would be the largest. 
 
 ```{r}
 explore.gdpGapminder <- 
@@ -95,12 +100,19 @@ explore.gdpGapminder %>%
 ### 2.2 **Task Option 5**
 How is life expectancy changing over time on different continents?
 
-**Comments**
+**Comments about the process**
 
 + [Read](https://garrettgman.github.io/tidying/) about tidying data so that I could transpose the table to a wide format.
 
 + [More](https://www.datanovia.com/en/blog/ggplot-title-subtitle-and-caption/) on how to add + adjust ggplot2 titles, subtitles and caption.
 
+**Comments about table and plot**
+
++ Particularly compared to the gdp per Capita values explored earlier, it is interesting to see that Oceania shows the highest life expectancy in all the recorded years. However, it is also the continent that has the least pronounced increase until the late 70s, earlier than that life expectancy remains pretty consistent at the 70-73 years old mark, meaning that in 37 years (1970 to 2007), life expectancy has increased by about 10 years.
+
++ On the other hand, life expectancy in Africa seems to have had a consistent increase until the late 1980s, and since then it has completely flatlined. It would be intriguing to see newer data, I am curious as to whether it has stayed around the same or it has resumed increasing (or possibly taken any dips)
+
++ I would also be interested in exploring life expectancy data based on female and male gender rather than in the general population, to see the differences between the two by continent.
 
 ```{r}
 explore.lifeExp.gapminder <-
@@ -130,9 +142,13 @@ ggplot(explore.lifeExp.gapminder, aes(x = year, y = avglifeExp, color = continen
 ### 2.3 **Task Option 4**
 Compute a trimmed mean of life expectancy for different years. Or a weighted mean, weighting by population. Just try something other than the plain vanilla mean.
 
-**Notes**
+**Comments about the process**
 
 + I found [this](https://garstats.wordpress.com/2017/11/28/trimmed-means/) article explaining trimmed means and their uses very interesting (and useful!)
+
+**Comments about the table and plot**
+
++ Worth pointing out that the increase starts to progress more slowly after 1980, i.e. before that the increase in average life expectancy is fairly sharp. 
 
 ```{r}
 trimmed.mean <-

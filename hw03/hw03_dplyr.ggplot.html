@@ -368,7 +368,6 @@ summary {
 
 <div id="loading-required-packages-to-complete-the-assignment." class="section level2">
 <h2>1. Loading required packages to complete the assignment.</h2>
-<pre class="r"><code>library(tidyverse)</code></pre>
 <pre><code>## ── Attaching packages ────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
 <pre><code>## ✔ ggplot2 3.2.1     ✔ purrr   0.3.2
 ## ✔ tibble  2.1.3     ✔ dplyr   0.8.3
@@ -377,14 +376,11 @@ summary {
 <pre><code>## ── Conflicts ───────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()</code></pre>
-<pre class="r"><code>library(gapminder)
-library(reshape2)</code></pre>
 <pre><code>## 
 ## Attaching package: 'reshape2'</code></pre>
 <pre><code>## The following object is masked from 'package:tidyr':
 ## 
 ##     smiths</code></pre>
-<pre class="r"><code>library(kableExtra) #for ''Optional Exercise''</code></pre>
 <pre><code>## 
 ## Attaching package: 'kableExtra'</code></pre>
 <pre><code>## The following object is masked from 'package:dplyr':
@@ -393,7 +389,7 @@ library(reshape2)</code></pre>
 </div>
 <div id="tasks." class="section level2">
 <h2>2. Tasks.</h2>
-<p>For this assignment, I completed tasks <strong>2, 4, and 5,</strong> as well as the <em>optional exercise</em>.</p>
+<p>For this assignment, I completed tasks <strong>2, 4, and 5,</strong> and I read the attached link to the side by side tables for the optional exercise, but I couldn’t figure it out.</p>
 <div id="instructions" class="section level3">
 <h3><strong>Instructions</strong></h3>
 <p>For the full instructions, follow this <a href="https://stat545.stat.ubc.ca/evaluation/hw03/hw03/">link</a>.</p>
@@ -407,12 +403,17 @@ library(reshape2)</code></pre>
 <div id="task-option-2" class="section level3">
 <h3>2.1 <strong>Task Option 2</strong></h3>
 <p>Get the maximum and minimum of GDP per capita for all continents.</p>
-<p><strong>Comments</strong></p>
+<p><strong>Comments about the process</strong></p>
 <ul>
 <li><p>Forgot about the use of facet_wrap since last class and I found <a href="http://www.cookbook-r.com/Graphs/Facets_(ggplot2)/">this</a> post very useful!</p></li>
 <li><p>Found solution to the error I came across in line 58 in <a href="https://stackoverflow.com/questions/39679057/r-ggplot2-stat-count-must-not-be-used-with-a-y-aesthetic-error-in-bar-graph/54296226">this</a> stack overflow post.</p></li>
 <li><p>Figured out how to use different colours with geom_bar <a href="https://plot.ly/ggplot2/geom_bar/">here</a></p></li>
 <li><p>Read <a href="https://www.datanovia.com/en/blog/ggplot-title-subtitle-and-caption/">this</a> to find out how to add subtitles and captions using ggplot2.</p></li>
+</ul>
+<p><strong>Comments about table and plot</strong></p>
+<ul>
+<li><p>It was interesting to see that while Asia has the highest max gdp per capita out of all five continents, the difference between the max and the min gdp per Capita is also the largest out of all five continents, whereas while Oceania’s max gdp per Capita is significantly lower, the difference between the min and the max is also substantially reduced.</p></li>
+<li><p>The large difference between the min and max gdp per Capita in Asia could mean that wealth is mostly concentrated in subpopulations within the general population. Given that the economy of this continent comprises 60% of the world population, it is to be expected that its gdp per Capita would be the largest.</p></li>
 </ul>
 <pre class="r"><code>explore.gdpGapminder &lt;- 
   gapminder %&gt;%
@@ -533,10 +534,16 @@ explore.gdpGapminder %&gt;%
 <div id="task-option-5" class="section level3">
 <h3>2.2 <strong>Task Option 5</strong></h3>
 <p>How is life expectancy changing over time on different continents?</p>
-<p><strong>Comments</strong></p>
+<p><strong>Comments about the process</strong></p>
 <ul>
 <li><p><a href="https://garrettgman.github.io/tidying/">Read</a> about tidying data so that I could transpose the table to a wide format.</p></li>
 <li><p><a href="https://www.datanovia.com/en/blog/ggplot-title-subtitle-and-caption/">More</a> on how to add + adjust ggplot2 titles, subtitles and caption.</p></li>
+</ul>
+<p><strong>Comments about table and plot</strong></p>
+<ul>
+<li><p>Particularly compared to the gdp per Capita values explored earlier, it is interesting to see that Oceania shows the highest life expectancy in all the recorded years. However, it is also the continent that has the least pronounced increase until the late 70s, earlier than that life expectancy remains pretty consistent at the 70-73 years old mark, meaning that in 37 years (1970 to 2007), life expectancy has increased by about 10 years.</p></li>
+<li><p>On the other hand, life expectancy in Africa seems to have had a consistent increase until the late 1980s, and since then it has completely flatlined. It would be intriguing to see newer data, I am curious as to whether it has stayed around the same or it has resumed increasing (or possibly taken any dips)</p></li>
+<li><p>I would also be interested in exploring life expectancy data based on female and male gender rather than in the general population, to see the differences between the two by continent.</p></li>
 </ul>
 <pre class="r"><code>explore.lifeExp.gapminder &lt;-
   gapminder %&gt;%
@@ -816,9 +823,13 @@ Oceania
 <div id="task-option-4" class="section level3">
 <h3>2.3 <strong>Task Option 4</strong></h3>
 <p>Compute a trimmed mean of life expectancy for different years. Or a weighted mean, weighting by population. Just try something other than the plain vanilla mean.</p>
-<p><strong>Notes</strong></p>
+<p><strong>Comments about the process</strong></p>
 <ul>
 <li>I found <a href="https://garstats.wordpress.com/2017/11/28/trimmed-means/">this</a> article explaining trimmed means and their uses very interesting (and useful!)</li>
+</ul>
+<p><strong>Comments about the table and plot</strong></p>
+<ul>
+<li>Worth pointing out that the increase starts to progress more slowly after 1980, i.e. before that the increase in average life expectancy is fairly sharp.</li>
 </ul>
 <pre class="r"><code>trimmed.mean &lt;-
 gapminder %&gt;%
