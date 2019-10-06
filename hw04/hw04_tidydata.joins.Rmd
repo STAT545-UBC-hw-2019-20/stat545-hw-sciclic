@@ -9,7 +9,9 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-#### *Loading packages*
+##### Full instructions for this assignment can be found **[here](https://stat545.stat.ubc.ca/evaluation/hw04/hw04/).**
+
+### *Set up*
 
 ```{r}
 library(tidyverse)
@@ -21,9 +23,13 @@ library(wesanderson) # This package contains color palettes from Wes Anderson mo
 
 ### **Exercise 1: Univariate Data Reshaping**
 
-## *Univariate Option 1*
+#### **Univariate Option 1**
 
-1. Make a tibble with one row per year, and columns for life expectancy for two or more countries.
+##### 1. Make a tibble with one row per year, and columns for life expectancy for two or more countries.
+
+*Notes*
+
++ I used the package **'gt'** to produce a nice-looking table instead of the usual knitr::kable. I used [this](https://gt.rstudio.com/articles/intro-creating-gt-tables.html), and the package is available for download [here](https://github.com/rstudio/gt).
 
 ```{r}
 gapminder_wide <-
@@ -38,7 +44,11 @@ gapminder_wide <-
 gapminder_wide # prints table
 ```
 
-2. Take advantage of this new data shape to scatterplot life expectancy for one country against that of another.
+##### 2. Take advantage of this new data shape to scatterplot life expectancy for one country against that of another.
+
+*Notes*
+
++ I used the package ['wes anderson'](https://github.com/karthik/wesanderson) that has different colour palettes for each of his movies to add colour to this scatterplot. 
 
 ```{r}
 LifeExp.plot <-
@@ -54,8 +64,7 @@ LifeExp.plot <-
 LifeExp.plot # Prints plot
 ```
 
-
-3. Re-lengthen the data.
+##### 3. Re-lengthen the data.
 
 ```{r}
 gapminder_length <- 
@@ -68,13 +77,13 @@ gapminder_length <-
 gapminder_length # Print
 ```
 
-*Notes on Exercise 1*
 
-+ For 1.1, I used the package 'gt' to produce a nice-looking table instead of the usual knitr::kable. I used [this](https://gt.rstudio.com/articles/intro-creating-gt-tables.html), and the package is available for download [here](https://github.com/rstudio/gt).
 
 ### **Exercise 2: Multivariate Data Reshaping**
 
-1. Make a tibble with one row per year, and columns for life expectancy and GDP per capita (or two other numeric variables) for two or more countries.
+#### **Multivariate Option 1**
+
+##### 1. Make a tibble with one row per year, and columns for life expectancy and GDP per capita (or two other numeric variables) for two or more countries.
 
 ```{r}
 # Reshaping data
@@ -101,7 +110,7 @@ gapminder_reshape %>%
 ```
 
 
-2. Re-lengthen the data.
+##### 2. Re-lengthen the data.
 
 ```{r}
 gapminder_reshape %>%
@@ -120,11 +129,9 @@ guest <- read_csv("https://raw.githubusercontent.com/STAT545-UBC/Classroom/maste
 email <- read_csv("https://raw.githubusercontent.com/STAT545-UBC/Classroom/master/data/wedding/emails.csv")
 ```
 
-#### **3.1:**
+##### **3.1: For each guest in the guestlist (guest tibble), add a column for email address, which can be found in the email tibble.**
 
-+ For each guest in the guestlist (guest tibble), add a column for email address, which can be found in the email tibble.
-
-*Notes*
+###### *Notes*
 
 + I found [this thread](https://stackoverflow.com/questions/13773770/split-comma-separated-strings-in-a-column-into-separate-rows) particularly useful to solve this question, as I got a bit stuck with organising the email tibble.
 
@@ -142,22 +149,34 @@ guest %>%
   DT::datatable() # Tibble presentation
 ```
 
-#### **3.2:**
 
-+ Who do we have emails for, yet are not on the guestlist?
+##### **3.2: Who do we have emails for, yet are not on the guestlist?**
 
 ```{r}
 email %>%
-  anti_join(guest, by = "name")
+  anti_join(guest, by = "name") %>%
+  knitr::kable()
 ```
 
 
-#### **3.3:**
+##### **3.3: Make a guestlist that includes everyone we have emails for (in addition to those on the original guestlist).**
 
-+ Make a guestlist that includes everyone we have emails for (in addition to those on the original guestlist).
+###### *Notes*
+
++ Guests Atlanta and Denzel Connolly, Chanelle Shah, Cosmo Dunkley, and Cai Mcdaniel are on the guest list but do not have emails - we can see this with full_join.
 
 ```{r}
-full_join(guest, email, by = "name")
+full_join(guest, email, by = "name") %>%
+  DT::datatable()
+```
+
++ If we want to only include those guests that have email addresses from both tibbles (email and guest), we can omit those rows that have NA values for the email column in the full_join tibble.
+
+```{r}
+full_join(guest, email, by = "name") %>%
+  select(name, email) %>%
+  na.omit() %>%
+  knitr::kable()
 ```
 
 
