@@ -9,7 +9,9 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-#### *Loading packages*
+##### Full instructions for this assignment can be found **[here](https://stat545.stat.ubc.ca/evaluation/hw04/hw04/).**
+
+### *Set up*
 
 ```{r}
 library(tidyverse)
@@ -21,9 +23,13 @@ library(wesanderson) # This package contains color palettes from Wes Anderson mo
 
 ### **Exercise 1: Univariate Data Reshaping**
 
-## *Univariate Option 1*
+#### **Univariate Option 1**
 
-1. Make a tibble with one row per year, and columns for life expectancy for two or more countries.
+##### 1. Make a tibble with one row per year, and columns for life expectancy for two or more countries.
+
+*Notes*
+
++ I used the package **'gt'** to produce a nice-looking table instead of the usual knitr::kable. I used [this](https://gt.rstudio.com/articles/intro-creating-gt-tables.html), and the package is available for download [here](https://github.com/rstudio/gt).
 
 ```{r}
 gapminder_wide <-
@@ -38,7 +44,11 @@ gapminder_wide <-
 gapminder_wide # prints table
 ```
 
-2. Take advantage of this new data shape to scatterplot life expectancy for one country against that of another.
+##### 2. Take advantage of this new data shape to scatterplot life expectancy for one country against that of another.
+
+*Notes*
+
++ I used the package ['wes anderson'](https://github.com/karthik/wesanderson) that has different colour palettes for each of his movies to add colour to this scatterplot. 
 
 ```{r}
 LifeExp.plot <-
@@ -54,8 +64,7 @@ LifeExp.plot <-
 LifeExp.plot # Prints plot
 ```
 
-
-3. Re-lengthen the data.
+##### 3. Re-lengthen the data.
 
 ```{r}
 gapminder_length <- 
@@ -68,13 +77,13 @@ gapminder_length <-
 gapminder_length # Print
 ```
 
-*Notes on Exercise 1*
 
-+ For 1.1, I used the package 'gt' to produce a nice-looking table instead of the usual knitr::kable. I used [this](https://gt.rstudio.com/articles/intro-creating-gt-tables.html), and the package is available for download [here](https://github.com/rstudio/gt).
 
 ### **Exercise 2: Multivariate Data Reshaping**
 
-1. Make a tibble with one row per year, and columns for life expectancy and GDP per capita (or two other numeric variables) for two or more countries.
+#### **Multivariate Option 1**
+
+##### 1. Make a tibble with one row per year, and columns for life expectancy and GDP per capita (or two other numeric variables) for two or more countries.
 
 ```{r}
 # Reshaping data
