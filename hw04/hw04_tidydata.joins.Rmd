@@ -126,19 +126,20 @@ email <- read_csv("https://raw.githubusercontent.com/STAT545-UBC/Classroom/maste
 
 *Notes*
 
-+ I found this thread particularly useful to solve this question https://stackoverflow.com/questions/13773770/split-comma-separated-strings-in-a-column-into-separate-rows
++ I found [this thread](https://stackoverflow.com/questions/13773770/split-comma-separated-strings-in-a-column-into-separate-rows) particularly useful to solve this question, as I got a bit stuck with organising the email tibble.
 
 ```{r}
+# Splitting the comma-divided rows into individual columns
 email <- 
   as_tibble(email) %>%
   mutate(name = strsplit(as.character(guest), ",")) %>%
   unnest(name)
 
+# Joining the tibbles
 guest %>%
-  left_join(email, by = "name") # why am I getting NAs in email if it does show above? 
-
-email %>%
-  left_join(guest, by = "name") # but this does work?
+  left_join(email, by = "name") %>% # Merge by name variable
+  select(name, email) %>% # Only keep the guest names & emails 
+  DT::datatable() # Tibble presentation
 ```
 
 #### **3.2:**
@@ -147,7 +148,7 @@ email %>%
 
 ```{r}
 email %>%
-  anti_join(guest, by = "name") 
+  anti_join(guest, by = "name")
 ```
 
 
@@ -156,7 +157,7 @@ email %>%
 + Make a guestlist that includes everyone we have emails for (in addition to those on the original guestlist).
 
 ```{r}
-
+full_join(guest, email, by = "name")
 ```
 
 
