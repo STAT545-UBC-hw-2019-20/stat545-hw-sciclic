@@ -5,7 +5,7 @@
 
 This assignment was not only uploaded in the .Rmd and .html formats that
 you can see within the folder, you may also view it as a webpage
-[here](https://stat545-ubc-hw-2019-20.github.io/stat545-hw-sciclic/hw03/hw04_tidydatajoins.html).
+[here](https://stat545-ubc-hw-2019-20.github.io/stat545-hw-sciclic/hw04/hw04_tidydatajoins.html).
 
 #### Relevant information
 
