@@ -1,15 +1,11 @@
-README
-================
-Icíar Fernández Boyano
-07/10/2019
 
-# Welcome to my hw03 folder\!
+# Welcome to my hw04 folder\!
 
-### Hi\! You are seeing the folder containing **Assignment 3** for my STAT545 homework.
+### Hi\! You are seeing the folder containing **Assignment 4** for my STAT545 homework.
 
 This assignment was not only uploaded in the .Rmd and .html formats that
 you can see within the folder, you may also view it as a webpage
-[here](https://stat545-ubc-hw-2019-20.github.io/stat545-hw-sciclic/hw03/hw03_dplyr.ggplot.html).
+[here](https://stat545-ubc-hw-2019-20.github.io/stat545-hw-sciclic/hw03/hw04_tidydatajoins.html).
 
 #### Relevant information
 
