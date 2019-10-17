@@ -1,0 +1,31 @@
+---
+title: 'Assignment 05: Factor and Figure Management'
+author: "Icíar Fernández Boyano"
+date: "16/10/2019"
+output: 
+  pdf_document:
+   toc: true
+   toc_depth: 3
+   number_sections: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+\newpage
+
+## **Navigation**
+
+Back to the [repository](https://github.com/STAT545-UBC-hw-2019-20/stat545-hw-sciclic/tree/master/hw05).
+
+See Assignment 05 [instructions](https://stat545.stat.ubc.ca/evaluation/hw05/hw05/) in detail. 
+
+# **Exercise 1: Explain the purpose of the here::here package**
+
+Read through the [blog post by Malcolm Barrett](https://malco.io/2018/11/05/why-should-i-use-the-here-package-when-i-m-already-using-projects/) where he outlines why one should use the here::here package in RStudio projects.
+
+Task: In your own words, summarize the value of the here::here package in 250 words or fewer. 
+
+# **Exercise 2: Factor Management**
+
