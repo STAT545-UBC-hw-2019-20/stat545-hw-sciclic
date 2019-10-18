@@ -21,11 +21,193 @@ Back to the [repository](https://github.com/STAT545-UBC-hw-2019-20/stat545-hw-sc
 
 See Assignment 05 [instructions](https://stat545.stat.ubc.ca/evaluation/hw05/hw05/) in detail. 
 
+*Loading packages*
+```{r}
+library(tidyverse)
+library(here)
+library(gapminder)
+library(wesanderson)
+library(here)
+library(forcats)
+library(purrr)
+library(reshape)
+library(dplyr)
+library(gt)
+library(gridExtra)
+```
+
+
 # **Exercise 1: Explain the purpose of the here::here package**
 
 Read through the [blog post by Malcolm Barrett](https://malco.io/2018/11/05/why-should-i-use-the-here-package-when-i-m-already-using-projects/) where he outlines why one should use the here::here package in RStudio projects.
 
 Task: In your own words, summarize the value of the here::here package in 250 words or fewer. 
 
+The `here::here` package is useful for sharing an script with multiple users; it uses a robust file path & avoids using an absolute path, meaning that:
+
+- here::here allows others to open a project without checking the path, which is useful because not all users' local directories have the same structure.. 
+
+- Different operating systems use different notations to separate folders. For example, Mac OSX does/it/this/way whereas Windows  does\things\another\way. Whenever the project gets accessed from a different OS, the user would have to replace the slashes with backslashes, or vice versa. 
+
+In conclusion, `here::here` makes sharing a project much easier.
+
+- When retrieving files from another subdirectory, rather than having to backtrack to the parent directory and locate it from there, you can use `here()` to call directly on the sub-directory if it's in your root folder.
+
 # **Exercise 2: Factor Management**
+
+# Elaboration for the gapminder data set
+
+**Drop Oceania.** Filter the Gapminder data to remove observations associated with the continent of Oceania. Additionally, remove unused factor levels. Provide concrete information on the data before and after removing these rows and Oceania; address the number of rows and the levels of the affected factors.
+
+**Reorder the levels of country or continent.** Use the forcats package to change the order of the factor levels, based on summarized information of one of the quantitative variables. Consider experimenting with a summary statistic beyond the most basic choice of the mean/median. Use the forcats package in the tidyverse for this, rather than the baseR function as.factor.
+
+```{r}
+gapminder_notoceania <- 
+  gapminder %>% 
+  filter(continent != "Oceania") %>% 
+  droplevels() %>% 
+  group_by(continent) %>% 
+  summarize(max_gdpPercap = max(gdpPercap))
+```
+
+A barplot is created using the above tibble while maintaining the original factor levels in the continent factor.
+```{r, fig.width = 5, fig.height = 3}
+gapminder_notoceania %>% 
+  ggplot(aes(x = continent, y = max_gdpPercap)) +
+  geom_bar(stat = "identity") +
+  theme_bw() +
+  xlab("Continent") +
+  ylab("Max Gdp per Cap") 
+```
+
+A barplot is created with the same tibble, but now the continent factor is rearranged based on their highest GDP per Capita values.
+```{r, fig.width = 5, fig.height = 3}
+gapminder_notoceania %>% 
+  ggplot(aes(x = fct_reorder(continent, max_gdpPercap), y = max_gdpPercap)) +
+  geom_bar(stat = "identity") +
+  theme_bw() 
+```
+
+# **Exercise 3: File input/output (I/O)**
+
+### write_csv()/read_csv()
+
+```{r}
+dr_here()
+(gapminder_here <- gapminder%>% 
+    filter(year == "1952"))
+write_csv(gapminder_here, here::here("gapminder_here.csv"))
+```
+
+```{r load_csv, warning=FALSE}
+(gapminder_load <- read_csv(here::here("gapminder_here.csv")))
+```
+
+We can see that the 'country' and 'continent' columns are parsed as a character class instead of factors (which is what they show up as in the original dataset).
+
+Now that we only have 10 years' worth of songs to work with, let's arrange them in ascending order of frequency from the top.
+
+# **Exercise 4: Visualization design**
+
+_Task:_ Create a side-by-side plot and juxtapose your first attempt (show the original figure as-is) with a revised attempt after some time spent working on it and implementing principles of effective plotting principles. Comment and reflect on the differences.
+
+Here is a figure from my Assignment 4, showing life expectancy over time in Spain and Canada.
+
+```{r}
+gapminder_wide <-
+  gapminder %>%
+  pivot_wider(id_cols = year,
+              names_from = "country",
+              values_from = lifeExp) %>% # At this point, we have columns for all countries showing life exp
+  select(year, Spain, Canada) %>% # Selecting two countries
+  gt() %>%
+  tab_header(title = "Life Expectancy over time in Spain and Canada")
+
+LifeExp.plot <-
+  gapminder_wide %>%
+  ggplot(aes(Spain, Canada)) +
+  geom_point(color=wes_palette("GrandBudapest1", 12, type = "continuous")) +
+  ggtitle("Life Expectancy in Spain and Canada from 1952 to 2007") +
+  xlab("Life Expectancy in Spain") +
+  ylab("Life Expectancy in Canada") +
+  theme_bw() +
+  theme(text = element_text(size = 12)) 
+```
+
+Changes to implement:
+- added a regression line
+
+```{r}
+LifeExp.plot <-
+  gapminder_wide %>%
+  ggplot(aes(Spain, Canada)) +
+  geom_point(color=wes_palette("GrandBudapest1", 12, type = "continuous")) +
+  ggtitle("Life Expectancy in Spain and Canada from 1952 to 2007") +
+  xlab("Life Expectancy in Spain") +
+  ylab("Life Expectancy in Canada") +
+  theme_bw() +
+  theme(text = element_text(size = 12))  +
+  geom_smooth(method = "lm")
+```
+
+Side by side comparison:
+
+<div class = "twoC">
+
+```{r sidebyside, echo=FALSE}
+LifeExp.plot <-
+  gapminder_wide %>%
+  ggplot(aes(Spain, Canada)) +
+  geom_point(color=wes_palette("GrandBudapest1", 12, type = "continuous")) +
+  ggtitle("Life Expectancy in Spain and Canada from 1952 to 2007") +
+  xlab("Life Expectancy in Spain") +
+  ylab("Life Expectancy in Canada") +
+  theme_bw() +
+  theme(text = element_text(size = 12)) 
+LifeExp.plot <-
+  gapminder_wide %>%
+  ggplot(aes(Spain, Canada)) +
+  geom_point(color=wes_palette("GrandBudapest1", 12, type = "continuous")) +
+  ggtitle("Life Expectancy in Spain and Canada from 1952 to 2007") +
+  xlab("Life Expectancy in Spain") +
+  ylab("Life Expectancy in Canada") +
+  theme_bw() +
+  theme(text = element_text(size = 12))  +
+  geom_smooth(method = "lm")
+```
+
+</div>
+
+# **Exercise 5: Writing figures to file**
+
+Task: Use ggsave() to explicitly save a plot to file. Include the exported plot as part of your repository and assignment.
+
+```{r}
+Plot1 <- LifeExp.plot <-
+  gapminder_wide %>%
+  ggplot(aes(Spain, Canada)) +
+  geom_point(color=wes_palette("GrandBudapest1", 12, type = "continuous")) +
+  ggtitle("Life Expectancy in Spain and Canada from 1952 to 2007") +
+  xlab("Life Expectancy in Spain") +
+  ylab("Life Expectancy in Canada") +
+  theme_bw() +
+  theme(text = element_text(size = 12)) 
+Plot2 <- LifeExp.plot <-
+  gapminder_wide %>%
+  ggplot(aes(Spain, Canada)) +
+  geom_point(color=wes_palette("GrandBudapest1", 12, type = "continuous")) +
+  ggtitle("Life Expectancy in Spain and Canada from 1952 to 2007") +
+  xlab("Life Expectancy in Spain") +
+  ylab("Life Expectancy in Canada") +
+  theme_bw() +
+  theme(text = element_text(size = 12))  +
+  geom_smooth(method = "lm")
+ggsave("LifeExpCanadaSpain.png", plot = grid.arrange(Plot1, Plot2, nrow = 2), dpi = 500)
+```
+
+# **Finishing up and Reflection**
+
+This is your last STAT 545 assignment, but I encourage you not to stop working with R here! Continue exploring datasets - whether they are your datasets, or the thousands of sample datasets on the internet. If you get stuck, there is a tremendous amount of resources out there including open online textbooks R for Data Science, Advanced R for Data Science, the learnr package, and of course, StackOverflow and Google.
+
+Best of luck with your R journey, and hope to see you in STAT 547 in the spring!
 
